@@ -1,14 +1,13 @@
 import { createContext } from "react";
 import { useState } from "react";
 
-export const UserContext = createContext(null);
+export const MyContext = createContext();
 
-export default function Context({ children }) {
-  const [user, setUser] = useState(null);
-
+export function MyProvider(props) {
+  const [user, setUser] = useState("batata");
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
+    <MyContext.Provider value={{ user, setUser }}>
+      {props.children}
+    </MyContext.Provider>
   );
 }

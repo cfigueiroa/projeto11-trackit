@@ -4,13 +4,13 @@ import Signup from "./pages/Signup";
 import Habits from "./pages/Habits";
 import Today from "./pages/Today";
 import History from "./pages/History";
-import Context from "./components/Context";
+import { MyProvider } from "./components/Context";
 
 
 export default function App() {
   return (
     <div className="App">
-      <Context.Provider>
+      <MyProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -20,7 +20,7 @@ export default function App() {
           <Route path="/historico" element={<History />} />
         </Routes>
       </BrowserRouter>
-      </Context.Provider>
+      </MyProvider>
     </div>
   );
 }

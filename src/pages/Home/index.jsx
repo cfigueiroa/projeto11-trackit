@@ -4,12 +4,15 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { MyContext } from "../../components/Context";
 
 
 export default function Home() {
   const navigate = useNavigate();
   const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
   const [form, setForm] = useState({ email: "", password: "" });
+  const { user, setUser } = useContext(MyContext);
 
   function login(e) {
     e.preventDefault();
@@ -31,7 +34,7 @@ export default function Home() {
 
   return (
     <Container>
-      <p>value}</p>
+      <p>{user}</p>
       <img src={logo} alt="Logo" />
       <Form onSubmit={login}>
         <input
