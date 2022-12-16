@@ -4,15 +4,14 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { MyContext } from "../../components/Context";
+import useMyContext from "../../components/Context";
 
 
 export default function Home() {
   const navigate = useNavigate();
   const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
   const [form, setForm] = useState({ email: "", password: "" });
-  const { user, setUser } = useContext(MyContext);
+  const { user, setUser } = useMyContext();
 
   function login(e) {
     e.preventDefault();
