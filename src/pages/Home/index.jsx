@@ -1,11 +1,10 @@
 import { Container, Form } from "./styles";
 import logo from "../../assets/logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useMyContext from "../../components/Context";
-
 
 export default function Home() {
   const navigate = useNavigate();
@@ -17,7 +16,8 @@ export default function Home() {
     e.preventDefault();
     const promise = axios.post(`${url}/auth/login`, form);
     promise.then((res) => {
-      navigate("/habitos", { state: { token: res.data.token } });
+      setUser(res.data, "token");
+      navigate("/habitos");
     });
     promise.catch((err) => {
       alert(err.response.data.message);
@@ -31,9 +31,16 @@ export default function Home() {
     });
   }
 
+  useEffect(() => {
+    if (user.token) {
+      navigate("/habitos");
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <Container>
-      <p>{user}</p>
+      <p>{user.token && JSON.stringify(user) + " ok!"}</p>
       <img src={logo} alt="Logo" />
       <Form onSubmit={login}>
         <input
@@ -54,7 +61,9 @@ export default function Home() {
         />
         <input type="submit" value="Entrar" />
       </Form>
-      <Link to="/cadastro"><p>Não tem uma conta? Cadastre-se!</p></Link>
+      <Link to="/cadastro">
+        <p>Não tem uma conta? Cadastre-se!</p>
+      </Link>
     </Container>
   );
 }

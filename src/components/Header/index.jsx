@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import useMyContext from "../../components/Context";
 
 export default function Header() {
+  const { user, setUser } = useMyContext();
   return <Container>
     <p>TrackIt</p>
-    <img src="" alt="teste"/>
+    <img src={user.image} alt="teste"/>
   </Container>;
 }
 
@@ -24,4 +26,11 @@ export const Container = styled.div`
         font-size: 39px;
         color: #fff;
     }
+    img {
+        width: 51px;
+        height: 51px;
+        border-radius: 50%;
+    }
 `;
+
+

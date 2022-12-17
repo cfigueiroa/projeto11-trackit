@@ -1,9 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
+import useStickyState from "../../hooks/useStickyState";
 
 const MyContext = createContext();
 
 export const MyProvider = ({ children }) => {
-  const [user, setUser] = useState("batata");
+  const [user, setUser] = useStickyState('', 'token');
   return (
     <MyContext.Provider value={{ user, setUser }}>
       {children}
