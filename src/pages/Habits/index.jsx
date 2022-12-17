@@ -18,7 +18,6 @@ export default function Habits() {
       setHabits({ ...habits, days: newDays });
     }
   };
-  
 
   return (
     <Container>
@@ -29,21 +28,29 @@ export default function Habits() {
       </Headline>
       <FormContainer>
         <Form onSubmit={teste}>
-          <input value={habits.input} onChange={(e) => setHabits({...habits, input: e.target.value})} type="text" placeholder="nome do hábito" />
+          <input
+            value={habits.input}
+            onChange={(e) => setHabits({ ...habits, input: e.target.value })}
+            type="text"
+            placeholder="nome do hábito"
+          />
           <div>
             {weekDays.map((d) => (
-              <button
+              <DayBtn
                 selected={habits.days.includes(d.id)}
                 type="button"
                 key={d.id}
                 onClick={() => handleDayChange(d.id)}
               >
                 {d.name}
-              </button>
+              </DayBtn>
             ))}
           </div>
           <div>
-            <button type="button" onClick={() => setHabits({ days: [], input: "" })}>
+            <button
+              type="button"
+              onClick={() => setHabits({ days: [], input: "" })}
+            >
               Cancelar
             </button>
             <button type="submit">Salvar</button>
@@ -100,6 +107,20 @@ export const Headline = styled.div`
   }
 `;
 
+export const DayBtn = styled.button`
+  border: 1px solid #d4d4d4;
+  background-color: ${(props) => (props.selected ? "blue" : "red")};
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  font-family: "Lexend Deca";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19.976px;
+  line-height: 25px;
+  color: #dbdbdb;
+`;
+
 export const Content = styled.div`
   margin: 28px 18px;
   p {
@@ -140,19 +161,6 @@ export const Form = styled.form`
     width: 100%;
     /* justify-content: center; */
     gap: 4px;
-    button {
-      border: 1px solid #d4d4d4;
-      background-color: ${props => props.selected ? 'blue' : 'red' };
-      border-radius: 5px;
-      width: 30px;
-      height: 30px;
-      font-family: "Lexend Deca";
-      font-style: normal;
-      font-weight: 400;
-      font-size: 19.976px;
-      line-height: 25px;
-      color: #dbdbdb;
-    }
   }
   div:last-of-type {
     display: flex;
