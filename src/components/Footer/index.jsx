@@ -1,13 +1,37 @@
 import styled from "styled-components";
 
-export default function Footer() {
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
+export default function Footer({ percentage }) {
   return (
     <Container>
       <p>Hábitos</p>
-      <p>Hoje</p>
+      <Example>
+        <CircularProgressbar
+          value={percentage}
+          text={`Hoje`}
+          background
+          backgroundPadding={6}
+          styles={buildStyles({
+            backgroundColor: "#3e98c7",
+            textColor: "#fff",
+            pathColor: "#fff",
+            trailColor: "transparent",
+          })}
+        />
+      </Example>
       <p>Histórico</p>
     </Container>
   );
+}
+
+function Example(props) {
+  return <div style={{width: "30%"}}>{props.children}</div>;
 }
 
 export const Container = styled.div`

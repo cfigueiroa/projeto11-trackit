@@ -17,7 +17,7 @@ export default function Home() {
     const promise = axios.post(`${url}/auth/login`, form);
     promise.then((res) => {
       setUser(res.data, "token");
-      navigate("/habitos");
+      navigate("/hoje");
     });
     promise.catch((err) => {
       alert(err.response.data.message);
@@ -33,7 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     if (user.token) {
-      navigate("/habitos");
+      navigate("/hoje");
     }
     // eslint-disable-next-line
   }, []);
