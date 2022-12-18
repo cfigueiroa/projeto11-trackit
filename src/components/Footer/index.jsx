@@ -1,17 +1,14 @@
 import styled from "styled-components";
-
-import {
-  CircularProgressbar,
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from "react-circular-progressbar";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer({ percentage }) {
+  const navigate = useNavigate();
   return (
     <Container>
-      <p>Hábitos</p>
-      <Example>
+      <p onClick={() => navigate("/habitos")}>Hábitos</p>
+      <ProgressbarContainer onClick={() => navigate("/hoje")}>
         <CircularProgressbar
           value={percentage}
           text={`Hoje`}
@@ -24,17 +21,23 @@ export default function Footer({ percentage }) {
             trailColor: "transparent",
           })}
         />
-      </Example>
-      <p>Histórico</p>
+      </ProgressbarContainer>
+      <p onClick={() => navigate("/historico")}>Histórico</p>
     </Container>
   );
 }
 
-function Example(props) {
-  return <div style={{width: "30%"}}>{props.children}</div>;
-}
+export const ProgressbarContainer = styled.div`
+  cursor: pointer;
+  width: 91px;
+  height: 91px;
+  position: absolute;
+  left: calc(50% - (91px / 2));
+  bottom: 10px;
+`;
 
 export const Container = styled.div`
+  position: relative;
   min-height: 70px;
   background-color: #ffffff;
   display: flex;
@@ -47,6 +50,7 @@ export const Container = styled.div`
   right: 0;
   z-index: 1;
   p {
+    cursor: pointer;
     font-family: "Lexend Deca";
     font-style: normal;
     font-weight: 400;
