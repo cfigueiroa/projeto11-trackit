@@ -1,7 +1,7 @@
 import { Container, Form } from "./styles";
 import logo from "../../assets/logo.png";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { StyledLink } from "./styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -83,9 +83,9 @@ export default function Signup() {
         />
         <input type="submit" value="Cadastrar" disabled={loading} />
       </Form>
-      <Link to="/">
+      <StyledLink to="/">
         <p>Já tem uma conta? Faça login!</p>
-      </Link>
+      </StyledLink>
     </Container>
   );
 }

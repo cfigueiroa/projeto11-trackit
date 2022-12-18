@@ -3,8 +3,8 @@ import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import useMyContext from "../../components/Context";
+import { StyledLink } from "./styles";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -61,9 +61,9 @@ export default function Home() {
         />
         <input type="submit" value="Entrar" />
       </Form>
-      <Link to="/cadastro">
+      <StyledLink to="/cadastro">
         <p>Não tem uma conta? Cadastre-se!</p>
-      </Link>
+      </StyledLink>
     </Container>
   );
 }

@@ -38,7 +38,7 @@ export default function Today() {
       const total = tempHabit.length;
       const done = tempHabit.filter((h) => h.done).length;
       const percent = Number(((done / total) * 100).toFixed(0));
-      setPercentage(percent);
+      setPercentage(isNaN(percent) ? 0 : percent);
     });
     promise.catch((err) => {
       console.log(err);
