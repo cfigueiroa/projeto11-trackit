@@ -228,10 +228,9 @@ export const Headline = styled.div`
     text-align: center;
     background: #52b6ff;
     border-radius: 4.63636px;
-    font-family: "Lexend Deca";
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 27.976px;
     color: #ffffff;
-    /* text doesn't look vertically aligned */
   }
 `;
 
