@@ -1,71 +1,199 @@
 import Header from "../../components/Header";
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import weekDays from "../../constants/weekDays";
+import useMyContext from "../../components/Context";
+import axios from "axios";
+import trash from "../../assets/trash.png";
+import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer";
 
 export default function Habits() {
-  const [habits, setHabits] = useState({ days: [], input: "" });
-  function teste(e) {
+  const navigate = useNavigate();
+  const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
+  const { user } = useMyContext();
+  const [newHabit, setNewHabit] = useState({ days: [], name: "" });
+  const [habitsList, setHabitsList] = useState();
+  const [showForm, setShowForm] = useState(false);
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    if (!user.token) {
+      navigate("/");
+    }
+    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+    const promise = axios.get(`${url}/habits`, headers);
+    promise.then((res) => {
+      setHabitsList(res.data.reverse());
+    });
+    promise.catch((err) => {
+      console.log(err);
+    });
+  }, [reload, user.token, navigate]);
+
+  function createHabit(e) {
     e.preventDefault();
-    console.log(habits);
+    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+    const promise = axios.post(`${url}/habits`, newHabit, headers);
+    promise.then((res) => {
+      console.log(res.data);
+    });
+    promise.catch((err) => {
+      alert(err.response.data.message);
+    });
+    promise.finally(() => {
+      resetHabits();
+      setReload(!reload);
+    });
+  }
+
+  function deleteHabit(id) {
+    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+    const promise = axios.delete(`${url}/habits/${id}`, headers);
+    promise.then((res) => {
+      console.log(res.data);
+    });
+    promise.catch((err) => {
+      alert(err.response.data.message);
+    });
+    promise.finally(() => {
+      setReload(!reload);
+    });
+  }
+
+  function resetHabits() {
+    setNewHabit({ days: [], name: "" });
   }
 
   const handleDayChange = (day) => {
-    if (habits.days.includes(day)) {
-      setHabits({ ...habits, days: habits.days.filter((d) => d !== day) });
+    if (newHabit.days.includes(day)) {
+      setNewHabit({
+        ...newHabit,
+        days: newHabit.days.filter((d) => d !== day),
+      });
     } else {
-      const newDays = [...habits.days, day].sort();
-      setHabits({ ...habits, days: newDays });
+      const newDays = [...newHabit.days, day].sort();
+      setNewHabit({ ...newHabit, days: newDays });
     }
   };
 
+  if (!habitsList) {
+    return <>Carregando...</>;
+  }
+
   return (
-    <Container>
+    <>
       <Header />
-      <Headline>
-        <h2>Meus hábitos</h2>
-        <button>+</button>
-      </Headline>
-      <FormContainer>
-        <Form onSubmit={teste}>
-          <input
-            value={habits.input}
-            onChange={(e) => setHabits({ ...habits, input: e.target.value })}
-            type="text"
-            placeholder="nome do hábito"
-          />
-          <div>
-            {weekDays.map((d) => (
-              <DayBtn
-                selected={habits.days.includes(d.id)}
-                type="button"
-                key={d.id}
-                onClick={() => handleDayChange(d.id)}
-              >
-                {d.name}
-              </DayBtn>
-            ))}
-          </div>
-          <div>
-            <button
-              type="button"
-              onClick={() => setHabits({ days: [], input: "" })}
-            >
-              Cancelar
-            </button>
-            <button type="submit">Salvar</button>
-          </div>
-        </Form>
-      </FormContainer>
-      <Content>
-        <p>
-          Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
-          começar a trackear!
-        </p>
-      </Content>
-    </Container>
+      <Container>
+        <Headline>
+          <h2>Meus hábitos</h2>
+          <button onClick={() => setShowForm(!showForm)}>+</button>
+        </Headline>
+        {showForm && (
+          <FormContainer>
+            <Form onSubmit={createHabit}>
+              <input
+                value={newHabit.name}
+                onChange={(e) =>
+                  setNewHabit({ ...newHabit, name: e.target.value })
+                }
+                type="text"
+                placeholder="nome do hábito"
+              />
+              <div>
+                {weekDays.map((d) => (
+                  <DayBtn
+                    selected={newHabit.days.includes(d.id)}
+                    type="button"
+                    key={d.id}
+                    onClick={() => handleDayChange(d.id)}
+                  >
+                    {d.name}
+                  </DayBtn>
+                ))}
+              </div>
+              <div>
+                <button type="button" onClick={resetHabits}>
+                  Cancelar
+                </button>
+                <button type="submit">Salvar</button>
+              </div>
+            </Form>
+          </FormContainer>
+        )}
+        {habitsList.length > 0 ? (
+          habitsList.map((h) => (
+            <HabitContainer key={h.id}>
+              <Habit>
+                <HabitHeadline>
+                  <h2>{h.name}</h2>
+                  <img
+                    src={trash}
+                    alt="trash"
+                    onClick={() => deleteHabit(h.id)}
+                  />
+                </HabitHeadline>
+                <HabitBtns>
+                  {weekDays.map((d) => (
+                    <DayBtn
+                      selected={h.days.includes(d.id)}
+                      type="button"
+                      key={d.id}
+                    >
+                      {d.name}
+                    </DayBtn>
+                  ))}
+                </HabitBtns>
+              </Habit>
+            </HabitContainer>
+          ))
+        ) : (
+          <Content>
+            <p>
+              Você não tem nenhum hábito cadastrado ainda. Adicione um hábito
+              para começar a trackear!
+            </p>
+          </Content>
+        )}
+      </Container>
+      <Footer />
+    </>
   );
 }
+
+export const Habit = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  gap: 15px;
+  h2 {
+    font-family: "Lexend Deca";
+    font-size: 19.976px;
+    line-height: 25px;
+    color: #666666;
+  }
+`;
+
+export const HabitContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 180px;
+  width: 90.67%;
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+`;
+
+export const HabitHeadline = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const HabitBtns = styled.div`
+  display: flex;
+  gap: 4px;
+`;
 
 export const Container = styled.div`
   min-height: 100vh;
@@ -109,7 +237,8 @@ export const Headline = styled.div`
 
 export const DayBtn = styled.button`
   border: 1px solid #d4d4d4;
-  background-color: ${(props) => (props.selected ? "blue" : "red")};
+  background-color: ${(props) => (props.selected ? "#CFCFCF" : "#fff")};
+  color: ${(props) => (props.selected ? "#fff" : "#CFCFCF")};
   border-radius: 5px;
   width: 30px;
   height: 30px;
@@ -118,7 +247,6 @@ export const DayBtn = styled.button`
   font-weight: 400;
   font-size: 19.976px;
   line-height: 25px;
-  color: #dbdbdb;
 `;
 
 export const Content = styled.div`
@@ -139,6 +267,7 @@ export const FormContainer = styled.div`
   width: 90.67%;
   background-color: #fff;
   border-radius: 5px;
+  margin-bottom: 10px;
 `;
 
 export const Form = styled.form`
