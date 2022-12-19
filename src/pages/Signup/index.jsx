@@ -1,5 +1,5 @@
 import { Container, Form } from "./styles";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.svg";
 import { useState } from "react";
 import { StyledLink } from "./styles";
 import { useNavigate } from "react-router-dom";

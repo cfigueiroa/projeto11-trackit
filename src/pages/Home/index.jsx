@@ -1,5 +1,5 @@
 import { Container, Form } from "./styles";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useMyContext from "../../components/Context";
