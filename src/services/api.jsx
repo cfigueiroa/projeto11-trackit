@@ -1,95 +1,80 @@
 import axios from "axios";
 
-const api = {
-  url: "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit",
+const instance = axios.create({
+  baseURL: "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit",
+});
 
+const headers = (token) => ({
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
+const api = {
   // Fazer cadastro
   fazerCadastro: (obj) => {
-    const { url } = api;
-    return axios.post(`${url}/auth/sign-up`, obj);
+    return instance.post(`/auth/sign-up`, obj);
   },
 
   // Fazer login
   fazerLogin: (obj) => {
-    const { url } = api;
-    return axios.post(`${url}/auth/login`, obj);
+    return instance.post(`/auth/login`, obj);
   },
 
   // Criar hábito
   criarHabito: (obj, token) => {
-    const { url } = api;
-    return axios.post(`${url}/habits`, obj, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return instance.post(`/habits`, obj, {
+      ...headers(token),
     });
   },
 
   // Listar hábitos
   listarHabitos: (token) => {
-    const { url } = api;
-    return axios.get(`${url}/habits`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return instance.get(`/habits`, {
+      ...headers(token),
     });
   },
 
   // Deletar hábito
   deletarHabito: (id, token) => {
-    const { url } = api;
-    return axios.delete(`${url}/habits/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return instance.delete(`/habits/${id}`, {
+      ...headers(token),
     });
   },
 
   // Buscar hábitos de hoje
   buscarHabitosDeHoje: (token) => {
-    const { url } = api;
-    return axios.get(`${url}/habits/today`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return instance.get(`/habits/today`, {
+      ...headers(token),
     });
   },
 
   // Marcar hábito como feito
   marcarHabitoComoFeito: (id, token) => {
-    const { url } = api;
-    return axios.post(
-      `${url}/habits/${id}/check`,
+    return instance.post(
+      `/habits/${id}/check`,
       {},
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        ...headers(token),
       }
     );
   },
 
   // Desmarcar hábito como feito
   desmarcarHabitoComoFeito: (id, token) => {
-    const { url } = api;
-    return axios.post(
-      `${url}/habits/${id}/uncheck`,
+    return instance.post(
+      `/habits/${id}/uncheck`,
       {},
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        ...headers(token),
       }
     );
   },
 
   // Histórico de hábitos diário
   historicoHabitosDiario: (token) => {
-    const { url } = api;
-    return axios.get(`${url}/habits/history/daily`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    return instance.get(`/habits/history/daily`, {
+      ...headers(token),
     });
   },
 };
