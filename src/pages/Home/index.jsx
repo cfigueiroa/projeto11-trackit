@@ -1,20 +1,19 @@
 import { Container, Form } from "./styles";
 import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useMyContext from "../../components/Context";
 import { StyledLink } from "./styles";
+import api from "../../services/api";
 
 export default function Home() {
   const navigate = useNavigate();
-  const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
   const [form, setForm] = useState({ email: "", password: "" });
   const { user, setUser } = useMyContext();
 
   function login(e) {
     e.preventDefault();
-    const promise = axios.post(`${url}/auth/login`, form);
+    const promise = api.fazerLogin(form);
     promise.then((res) => {
       setUser(res.data, "token");
       navigate("/hoje");
@@ -40,7 +39,6 @@ export default function Home() {
 
   return (
     <Container>
-      <p>{user.token && JSON.stringify(user) + " ok!"}</p>
       <img src={logo} alt="Logo" />
       <Form onSubmit={login}>
         <input

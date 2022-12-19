@@ -3,14 +3,13 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import weekDays from "../../constants/weekDays";
 import useMyContext from "../../components/Context";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
 import check from "../../assets/check.png";
+import api from "../../services/api";
 
 export default function Today() {
   const navigate = useNavigate();
-  const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
   const { user } = useMyContext();
   const [habitsList, setHabitsList] = useState();
   const [reload, setReload] = useState(false);
@@ -30,8 +29,7 @@ export default function Today() {
     if (!user.token) {
       navigate("/");
     }
-    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
-    const promise = axios.get(`${url}/habits/today`, headers);
+    const promise = api.buscarHabitosDeHoje(user.token);
     promise.then((res) => {
       const tempHabit = res.data.reverse()
       setHabitsList(tempHabit);
@@ -46,13 +44,11 @@ export default function Today() {
   }, [reload, user.token, navigate]);
 
   function toggleHabit(id, done) {
-    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
-    const body = {};
     let promise;
     if (!done) {
-      promise = axios.post(`${url}/habits/${id}/check`, body, headers);
+      promise = api.marcarHabitoComoFeito(id, user.token);
     } else {
-      promise = axios.post(`${url}/habits/${id}/uncheck`, body, headers);
+      promise = api.desmarcarHabitoComoFeito(id, user.token);
     }
     promise.catch((err) => {
       alert(err.response.data.message);

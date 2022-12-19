@@ -3,14 +3,13 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import weekDays from "../../constants/weekDays";
 import useMyContext from "../../components/Context";
-import axios from "axios";
 import trash from "../../assets/trash.png";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
+import api from "../../services/api";
 
 export default function Habits() {
   const navigate = useNavigate();
-  const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
   const { user } = useMyContext();
   const [newHabit, setNewHabit] = useState({ days: [], name: "" });
   const [habitsList, setHabitsList] = useState();
@@ -21,8 +20,7 @@ export default function Habits() {
     if (!user.token) {
       navigate("/");
     }
-    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
-    const promise = axios.get(`${url}/habits`, headers);
+    const promise = api.listarHabitos(user.token);
     promise.then((res) => {
       setHabitsList(res.data.reverse());
     });
@@ -33,8 +31,7 @@ export default function Habits() {
 
   function createHabit(e) {
     e.preventDefault();
-    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
-    const promise = axios.post(`${url}/habits`, newHabit, headers);
+    const promise = api.criarHabito(newHabit, user.token);
     promise.then((res) => {
       console.log(res.data);
     });
@@ -48,8 +45,7 @@ export default function Habits() {
   }
 
   function deleteHabit(id) {
-    const headers = { headers: { Authorization: `Bearer ${user.token}` } };
-    const promise = axios.delete(`${url}/habits/${id}`, headers);
+    const promise = api.deletarHabito(id, user.token);
     promise.then((res) => {
       console.log(res.data);
     });

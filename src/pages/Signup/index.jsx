@@ -2,11 +2,10 @@ import { Container, Form } from "./styles";
 import logo from "../../assets/logo.png";
 import { useState } from "react";
 import { StyledLink } from "./styles";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 
 export default function Signup() {
-  const url = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -15,7 +14,6 @@ export default function Signup() {
     image: "",
   });
   const [loading, setLoading] = useState(false);
-
 
   function handleForm(e) {
     setForm({
@@ -27,7 +25,7 @@ export default function Signup() {
   function signup(e) {
     e.preventDefault();
     setLoading(true);
-    const promise = axios.post(`${url}/auth/sign-up`, form);
+    const promise = api.fazerCadastro(form);
     promise.then(() => {
       alert("Cadastro realizado com sucesso!");
       navigate("/");
@@ -37,8 +35,7 @@ export default function Signup() {
     });
     promise.finally(() => {
       setLoading(false);
-    }
-    );
+    });
   }
 
   return (

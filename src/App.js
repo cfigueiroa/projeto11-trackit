@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Habits from "./pages/Habits";
 import Today from "./pages/Today";
 import History from "./pages/History";
+import Test from "./pages/Test";
 import { MyProvider } from "./components/Context";
 
 
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/habitos" element={<Habits />} />
           <Route path="/hoje" element={<Today />} />
           <Route path="/historico" element={<History />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
       </MyProvider>
