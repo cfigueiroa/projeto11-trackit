@@ -10,7 +10,7 @@ import api from "../../services/api";
 
 export default function Habits() {
   const navigate = useNavigate();
-  const { user } = useMyContext();
+  const { user, getPercentage } = useMyContext();
   const [newHabit, setNewHabit] = useState({ days: [], name: "" });
   const [habitsList, setHabitsList] = useState();
   const [showForm, setShowForm] = useState(false);
@@ -33,7 +33,7 @@ export default function Habits() {
     e.preventDefault();
     const promise = api.createHabit(newHabit, user.token);
     promise.then((res) => {
-      console.log(res.data);
+      getPercentage();
     });
     promise.catch((err) => {
       alert(err.response.data.message);
@@ -47,7 +47,7 @@ export default function Habits() {
   function deleteHabit(id) {
     const promise = api.deleteHabit(id, user.token);
     promise.then((res) => {
-      console.log(res.data);
+      getPercentage();
     });
     promise.catch((err) => {
       alert(err.response.data.message);
@@ -193,7 +193,7 @@ export const HabitBtns = styled.div`
 
 export const Container = styled.div`
   min-height: 100vh;
-  padding-top: 70px;
+  padding: 70px 0;
   display: flex;
   flex-direction: column;
   align-items: center;

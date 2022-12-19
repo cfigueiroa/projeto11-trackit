@@ -2,8 +2,10 @@ import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
+import useMyContext from "../../components/Context";
 
-export default function Footer({ percentage }) {
+export default function Footer() {
+  const { percentage } = useMyContext();
   const navigate = useNavigate();
   return (
     <Container>
@@ -34,6 +36,7 @@ export const ProgressbarContainer = styled.div`
   position: absolute;
   left: calc(50% - (91px / 2));
   bottom: 10px;
+  font-family: "Lexend Deca";
 `;
 
 export const Container = styled.div`

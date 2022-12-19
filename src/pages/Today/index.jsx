@@ -10,10 +10,9 @@ import api from "../../services/api";
 
 export default function Today() {
   const navigate = useNavigate();
-  const { user } = useMyContext();
+  const { user, getPercentage, percentage } = useMyContext();
   const [habitsList, setHabitsList] = useState();
   const [reload, setReload] = useState(false);
-  const [percentage, setPercentage] = useState(0);
   const today = new Date();
   const dayOfWeek = weekDays[today.getDay()].day;
   const date = today.getDate();
@@ -31,17 +30,17 @@ export default function Today() {
     }
     const promise = api.getTodayHabits(user.token);
     promise.then((res) => {
-      const tempHabit = res.data.reverse()
+      const tempHabit = res.data.reverse();
       setHabitsList(tempHabit);
-      const total = tempHabit.length;
-      const done = tempHabit.filter((h) => h.done).length;
-      const percent = Number(((done / total) * 100).toFixed(0));
-      setPercentage(isNaN(percent) ? 0 : percent);
     });
-    promise.catch((err) => {
-      console.log(err);
-    });
-  }, [reload, user.token, navigate]);
+    promise
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        getPercentage();
+      });
+  }, [reload, user.token, navigate, getPercentage]);
 
   function toggleHabit(id, done) {
     let promise;
@@ -70,6 +69,7 @@ export default function Today() {
           <h2>
             {dayOfWeek}, {format(date, month)}
           </h2>
+          {percentage ?  <h3 style={{color: "#8FC549"}}>{percentage}% dos hábitos concluídos</h3> : <h3>Nenhum hábito concluído ainda</h3>}
         </Headline>
         {habitsList.length > 0 ? (
           habitsList.map((h) => (
@@ -82,13 +82,13 @@ export default function Today() {
                     <br />
                     Seu recorde: {h.highestSequence} dias
                   </p>
-                  <Bilola selected={h.done}>
+                  <CheckSquare selected={h.done}>
                     <img
                       src={check}
                       alt="check"
                       onClick={() => toggleHabit(h.id, h.done)}
                     />
-                  </Bilola>
+                  </CheckSquare>
                 </HabitHeadline>
               </Habit>
             </HabitContainer>
@@ -102,17 +102,17 @@ export default function Today() {
           </Content>
         )}
       </Container>
-      <Footer percentage={percentage}/>
+      <Footer />
     </>
   );
 }
 
-export const Bilola = styled.div`
+export const CheckSquare = styled.div`
   position: absolute;
   display: grid;
   place-items: center;
-  top: 10px;
-  right: 10px;
+  top: calc(50% - (69px / 2));
+  right: 13px;
   width: 69px;
   height: 69px;
   background: ${(props) => (props.selected ? "#8fc549" : "#EBEBEB")};
@@ -134,10 +134,11 @@ export const Habit = styled.div`
 `;
 
 export const HabitContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 180px;
+  min-height: 94px;
   width: 90.67%;
   background-color: #fff;
   border-radius: 5px;
@@ -145,10 +146,16 @@ export const HabitContainer = styled.div`
 `;
 
 export const HabitHeadline = styled.div`
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  p {
+    margin-top: 7px;
+    font-family: "Lexend Deca";
+    font-size: 12.976px;
+    line-height: 16px;
+    color: #666666;
+  }
 `;
 
 export const HabitBtns = styled.div`
@@ -158,40 +165,27 @@ export const HabitBtns = styled.div`
 
 export const Container = styled.div`
   min-height: 100vh;
-  padding-top: 70px;
+  padding: 98px 17px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
   background-color: #f2f2f2;
 `;
 
 export const Headline = styled.div`
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  * {
-    margin: 28px 18px;
-  }
+  margin-bottom: 17px;
   h2 {
     font-family: "Lexend Deca";
     font-size: 22.976px;
     line-height: 29px;
     color: #126ba5;
   }
-  button {
-    border: none;
-    padding: 0;
-    width: 40px;
-    height: 35px;
-    line-height: 35px;
-    text-align: center;
-    background: #52b6ff;
-    border-radius: 4.63636px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 27.976px;
-    color: #ffffff;
+  h3 {
+    font-family: "Lexend Deca";
+    font-size: 17.976px;
+    line-height: 22px;
+    color: #bababa;
   }
 `;
 
@@ -216,59 +210,5 @@ export const Content = styled.div`
     font-size: 17.976px;
     line-height: 22px;
     color: #666666;
-  }
-`;
-
-export const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 180px;
-  width: 90.67%;
-  background-color: #fff;
-  border-radius: 5px;
-  margin-bottom: 10px;
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  padding: 0 20px;
-  gap: 15px;
-  input {
-    width: 89.12%;
-    min-height: 45px;
-    font-family: "Lexend Deca";
-    font-size: 19.976px;
-    line-height: 25px;
-  }
-  input::placeholder {
-    color: #dbdbdb;
-  }
-  div:first-of-type {
-    display: flex;
-    width: 100%;
-    /* justify-content: center; */
-    gap: 4px;
-  }
-  div:last-of-type {
-    display: flex;
-    justify-content: flex-end;
-    button:first-of-type {
-      border: none;
-      height: 35px;
-      width: 84px;
-      border-radius: 4.636363506317139px;
-      background-color: #fff;
-      color: #52b6ff;
-    }
-    button:last-of-type {
-      border: none;
-      height: 35px;
-      width: 84px;
-      border-radius: 4.636363506317139px;
-      background-color: #52b6ff;
-      color: #fff;
-    }
   }
 `;
