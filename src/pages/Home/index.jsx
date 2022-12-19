@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import useMyContext from "../../components/Context";
 import { StyledLink } from "./styles";
 import api from "../../services/api";
+import Loading from "../../components/Loading";
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -65,7 +67,8 @@ export default function Home() {
           placeholder="senha"
           disabled={loading}
         />
-        <input type="submit" value="Entrar" disabled={loading} />
+        <button type="submit" disabled={loading}>{loading ? <Loading width={100} height={100}/> : "Entrar" }</button>
+
       </Form>
       <StyledLink to="/cadastro">
         <p>Não tem uma conta? Cadastre-se!</p>

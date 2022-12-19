@@ -3,10 +3,12 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import weekDays from "../../constants/weekDays";
 import useMyContext from "../../components/Context";
-import trash from "../../assets/trash.png";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
 import api from "../../services/api";
+import { IonIcon } from "@ionic/react";
+import { trashOutline } from "ionicons/icons";
+import Spinner from "../../components/Spinner";
 
 export default function Habits() {
   const navigate = useNavigate();
@@ -31,6 +33,10 @@ export default function Habits() {
 
   function createHabit(e) {
     e.preventDefault();
+    if (newHabit.days.length === 0) {
+      window.alert("Selecione ao menos um dia da semana");
+      return;
+    }
     const promise = api.createHabit(newHabit, user.token);
     promise.then((res) => {
       getPercentage();
@@ -45,16 +51,18 @@ export default function Habits() {
   }
 
   function deleteHabit(id) {
-    const promise = api.deleteHabit(id, user.token);
-    promise.then((res) => {
-      getPercentage();
-    });
-    promise.catch((err) => {
-      alert(err.response.data.message);
-    });
-    promise.finally(() => {
-      setReload(!reload);
-    });
+    if (window.confirm("Tem certeza que deseja deletar esse hábito?")) {
+      const promise = api.deleteHabit(id, user.token);
+      promise.then((res) => {
+        getPercentage();
+      });
+      promise.catch((err) => {
+        alert(err.response.data.message);
+      });
+      promise.finally(() => {
+        setReload(!reload);
+      });
+    }
   }
 
   function resetHabits() {
@@ -74,7 +82,13 @@ export default function Habits() {
   };
 
   if (!habitsList) {
-    return <>Carregando...</>;
+    return (
+      <>
+        <Header />
+        <Spinner />
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -95,6 +109,7 @@ export default function Habits() {
                 }
                 type="text"
                 placeholder="nome do hábito"
+                required
               />
               <div>
                 {weekDays.map((d) => (
@@ -123,10 +138,11 @@ export default function Habits() {
               <Habit>
                 <HabitHeadline>
                   <h2>{h.name}</h2>
-                  <img
-                    src={trash}
-                    alt="trash"
+                  <IonIcon
+                    icon={trashOutline}
                     onClick={() => deleteHabit(h.id)}
+                    size="large"
+                    title="Deletar hábito"
                   />
                 </HabitHeadline>
                 <HabitBtns>
@@ -184,6 +200,8 @@ export const HabitContainer = styled.div`
 export const HabitHeadline = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  color: #666666;
 `;
 
 export const HabitBtns = styled.div`

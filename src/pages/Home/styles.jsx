@@ -25,13 +25,19 @@ export const Form = styled.form`
       color: #dbdbdb;
     }
   }
-  input[type="submit"] {
-    border: none;
+  button {
+    align-items: center;
     background: #52b6ff;
-    font-size: 20.976px;
-    line-height: 26px;
-    text-align: center;
+    border-radius: 4.63636px;
+    border: none;
     color: #ffffff;
+    display: flex;
+    font-family: "Lexend Deca";
+    font-size: 20.976px;
+    height: 45px;
+    justify-content: center;
+    min-width: 303px;
+    padding-left: 10px;
   }
 `;
 

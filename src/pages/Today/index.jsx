@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
 import check from "../../assets/check.png";
 import api from "../../services/api";
+import Spinner from "../../components/Spinner";
 
 export default function Today() {
   const navigate = useNavigate();
@@ -58,7 +59,13 @@ export default function Today() {
   }
 
   if (!habitsList) {
-    return <>Carregando...</>;
+    return (
+      <>
+        <Header />
+        <Spinner />
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -69,7 +76,13 @@ export default function Today() {
           <h2>
             {dayOfWeek}, {format(date, month)}
           </h2>
-          {percentage ?  <h3 style={{color: "#8FC549"}}>{percentage}% dos hábitos concluídos</h3> : <h3>Nenhum hábito concluído ainda</h3>}
+          {percentage ? (
+            <h3 style={{ color: "#8FC549" }}>
+              {percentage}% dos hábitos concluídos
+            </h3>
+          ) : (
+            <h3>Nenhum hábito concluído ainda</h3>
+          )}
         </Headline>
         {habitsList.length > 0 ? (
           habitsList.map((h) => (
