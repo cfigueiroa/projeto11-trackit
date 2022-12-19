@@ -1,80 +1,88 @@
 import axios from "axios";
 
-const instance = axios.create({
-  baseURL: "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit",
+// Constants
+const BASE_URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit";
+const AUTHORIZATION_HEADER = "Authorization";
+
+// Endpoints
+const ENDPOINTS = {
+  SIGN_UP: "/auth/sign-up",
+  LOGIN: "/auth/login",
+  HABITS: "/habits",
+  TODAY: "/habits/today",
+  HISTORY_DAILY: "/habits/history/daily",
+};
+
+// Axios instance with base URL
+const AXIOS_INSTANCE = axios.create({
+  baseURL: BASE_URL,
 });
 
-const headers = (token) => ({
+// Header object with Authorization header and token
+const HEADERS = (token) => ({
   headers: {
-    Authorization: `Bearer ${token}`,
+    [AUTHORIZATION_HEADER]: `Bearer ${token}`,
   },
 });
 
+// API object with functions for each endpoint
 const api = {
-  // Fazer cadastro
-  fazerCadastro: (obj) => {
-    return instance.post(`/auth/sign-up`, obj);
+  // fazerCadastro
+  createAccount: (obj) => {
+    return AXIOS_INSTANCE.post(ENDPOINTS.SIGN_UP, obj);
   },
-
-  // Fazer login
-  fazerLogin: (obj) => {
-    return instance.post(`/auth/login`, obj);
+  // fazerLogin
+  login: (obj) => {
+    return AXIOS_INSTANCE.post(ENDPOINTS.LOGIN, obj);
   },
-
-  // Criar hábito
-  criarHabito: (obj, token) => {
-    return instance.post(`/habits`, obj, {
-      ...headers(token),
+  // criarHabito
+  createHabit: (obj, token) => {
+    return AXIOS_INSTANCE.post(ENDPOINTS.HABITS, obj, {
+      ...HEADERS(token),
     });
   },
-
-  // Listar hábitos
-  listarHabitos: (token) => {
-    return instance.get(`/habits`, {
-      ...headers(token),
+  // listarHabitos
+  getHabits: (token) => {
+    return AXIOS_INSTANCE.get(ENDPOINTS.HABITS, {
+      ...HEADERS(token),
     });
   },
-
-  // Deletar hábito
-  deletarHabito: (id, token) => {
-    return instance.delete(`/habits/${id}`, {
-      ...headers(token),
+  // deletarHabito
+  deleteHabit: (id, token) => {
+    return AXIOS_INSTANCE.delete(`${ENDPOINTS.HABITS}/${id}`, {
+      ...HEADERS(token),
     });
   },
-
-  // Buscar hábitos de hoje
-  buscarHabitosDeHoje: (token) => {
-    return instance.get(`/habits/today`, {
-      ...headers(token),
+  // buscarHabitosDeHoje
+  getTodayHabits: (token) => {
+    return AXIOS_INSTANCE.get(ENDPOINTS.TODAY, {
+      ...HEADERS(token),
     });
   },
-
-  // Marcar hábito como feito
-  marcarHabitoComoFeito: (id, token) => {
-    return instance.post(
-      `/habits/${id}/check`,
+  // marcarHabitoComoFeito
+  markHabitAsDone: (id, token) => {
+    return AXIOS_INSTANCE.post(
+      `${ENDPOINTS.HABITS}/${id}/check`,
       {},
       {
-        ...headers(token),
+        ...HEADERS(token),
       }
     );
   },
-
-  // Desmarcar hábito como feito
-  desmarcarHabitoComoFeito: (id, token) => {
-    return instance.post(
-      `/habits/${id}/uncheck`,
+  // desmarcarHabitoComoFeito
+  unmarkHabitAsDone: (id, token) => {
+    return AXIOS_INSTANCE.post(
+      `${ENDPOINTS.HABITS}/${id}/uncheck`,
       {},
       {
-        ...headers(token),
+        ...HEADERS(token),
       }
     );
   },
-
-  // Histórico de hábitos diário
-  historicoHabitosDiario: (token) => {
-    return instance.get(`/habits/history/daily`, {
-      ...headers(token),
+  // historicoHabitosDiario
+  getDailyHistory: (token) => {
+    return AXIOS_INSTANCE.get(ENDPOINTS.HISTORY_DAILY, {
+      ...HEADERS(token),
     });
   },
 };

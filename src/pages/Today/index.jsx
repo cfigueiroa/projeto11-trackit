@@ -29,7 +29,7 @@ export default function Today() {
     if (!user.token) {
       navigate("/");
     }
-    const promise = api.buscarHabitosDeHoje(user.token);
+    const promise = api.getTodayHabits(user.token);
     promise.then((res) => {
       const tempHabit = res.data.reverse()
       setHabitsList(tempHabit);
@@ -46,9 +46,9 @@ export default function Today() {
   function toggleHabit(id, done) {
     let promise;
     if (!done) {
-      promise = api.marcarHabitoComoFeito(id, user.token);
+      promise = api.markHabitAsDone(id, user.token);
     } else {
-      promise = api.desmarcarHabitoComoFeito(id, user.token);
+      promise = api.unmarkHabitAsDone(id, user.token);
     }
     promise.catch((err) => {
       alert(err.response.data.message);

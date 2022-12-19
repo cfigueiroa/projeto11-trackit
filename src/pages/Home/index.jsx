@@ -13,7 +13,7 @@ export default function Home() {
 
   function login(e) {
     e.preventDefault();
-    const promise = api.fazerLogin(form);
+    const promise = api.login(form);
     promise.then((res) => {
       setUser(res.data, "token");
       navigate("/hoje");

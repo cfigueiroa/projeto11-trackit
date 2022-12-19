@@ -25,7 +25,7 @@ export default function Signup() {
   function signup(e) {
     e.preventDefault();
     setLoading(true);
-    const promise = api.fazerCadastro(form);
+    const promise = api.createAccount(form);
     promise.then(() => {
       alert("Cadastro realizado com sucesso!");
       navigate("/");

@@ -20,7 +20,7 @@ export default function Habits() {
     if (!user.token) {
       navigate("/");
     }
-    const promise = api.listarHabitos(user.token);
+    const promise = api.getHabits(user.token);
     promise.then((res) => {
       setHabitsList(res.data.reverse());
     });
@@ -31,7 +31,7 @@ export default function Habits() {
 
   function createHabit(e) {
     e.preventDefault();
-    const promise = api.criarHabito(newHabit, user.token);
+    const promise = api.createHabit(newHabit, user.token);
     promise.then((res) => {
       console.log(res.data);
     });
@@ -45,7 +45,7 @@ export default function Habits() {
   }
 
   function deleteHabit(id) {
-    const promise = api.deletarHabito(id, user.token);
+    const promise = api.deleteHabit(id, user.token);
     promise.then((res) => {
       console.log(res.data);
     });
