@@ -4,6 +4,7 @@ import { useState } from "react";
 import { StyledLink } from "./styles";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import Loading from "../../components/Loading";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -27,7 +28,6 @@ export default function Signup() {
     setLoading(true);
     const promise = api.createAccount(form);
     promise.then(() => {
-      alert("Cadastro realizado com sucesso!");
       navigate("/");
     });
     promise.catch((err) => {
@@ -78,7 +78,9 @@ export default function Signup() {
           placeholder="foto"
           disabled={loading}
         />
-        <input type="submit" value="Cadastrar" disabled={loading} />
+        <button type="submit" disabled={loading}>
+          {loading ? <Loading width={100} height={100} /> : "Cadastrar"}
+        </button>
       </Form>
       <StyledLink to="/">
         <p>Já tem uma conta? Faça login!</p>

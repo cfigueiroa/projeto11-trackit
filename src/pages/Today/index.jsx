@@ -98,19 +98,22 @@ export default function Today() {
                       }
                     >
                       {" "}
-                      {h.currentSequence} {h.currentSequence > 1 ? "dias" : "dia"}
+                      {h.currentSequence}{" "}
+                      {h.currentSequence > 1 ? "dias" : "dia"}
                     </strong>
                     <br />
                     Seu recorde:{" "}
                     <strong
                       style={
                         h.currentSequence === h.highestSequence &&
-                        h.highestSequence !== 0
+                        h.highestSequence > 0 &&
+                        h.done
                           ? { color: "#8FC549" }
                           : { color: "#666666" }
                       }
                     >
-                      {h.highestSequence} {h.highestSequence > 1 ? "dias" : "dia"}
+                      {h.highestSequence}{" "}
+                      {h.highestSequence > 1 ? "dias" : "dia"}
                     </strong>
                   </p>
                   <CheckSquare selected={h.done}>

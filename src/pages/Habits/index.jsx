@@ -9,6 +9,7 @@ import api from "../../services/api";
 import { IonIcon } from "@ionic/react";
 import { trashOutline } from "ionicons/icons";
 import Spinner from "../../components/Spinner";
+import Loading from "../../components/Loading";
 
 export default function Habits() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function Habits() {
   const [habitsList, setHabitsList] = useState();
   const [showForm, setShowForm] = useState(false);
   const [reload, setReload] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     if (!user.token) {
@@ -37,6 +39,7 @@ export default function Habits() {
       window.alert("Selecione ao menos um dia da semana");
       return;
     }
+    setDisabled(true);
     const promise = api.createHabit(newHabit, user.token);
     promise.then((res) => {
       getPercentage();
@@ -46,6 +49,7 @@ export default function Habits() {
     });
     promise.finally(() => {
       resetHabits();
+      setDisabled(false);
       setShowForm(false);
       setReload(!reload);
     });
@@ -111,6 +115,7 @@ export default function Habits() {
                 }
                 type="text"
                 placeholder="nome do hábito"
+                disabled={disabled}
                 required
               />
               <div>
@@ -120,6 +125,7 @@ export default function Habits() {
                     type="button"
                     key={d.id}
                     onClick={() => handleDayChange(d.id)}
+                    disabled={disabled}
                   >
                     {d.name}
                   </DayBtn>
@@ -129,7 +135,9 @@ export default function Habits() {
                 <button type="button" onClick={() => setShowForm(false)}>
                   Cancelar
                 </button>
-                <button type="submit">Salvar</button>
+                <button type="submit" disabled={disabled}>
+                  {disabled ? <Loading width={84} height={35} /> : "Salvar"}
+                </button>
               </div>
             </Form>
           </FormContainer>
@@ -290,6 +298,7 @@ export const Form = styled.form`
   flex-direction: column;
   padding: 0 20px;
   gap: 15px;
+  font-family: "Lexend Deca";
   input {
     padding-left: 10px;
     width: 89.12%;

@@ -7,7 +7,6 @@ import { StyledLink } from "./styles";
 import api from "../../services/api";
 import Loading from "../../components/Loading";
 
-
 export default function Home() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -67,8 +66,9 @@ export default function Home() {
           placeholder="senha"
           disabled={loading}
         />
-        <button type="submit" disabled={loading}>{loading ? <Loading width={100} height={100}/> : "Entrar" }</button>
-
+        <button type="submit" disabled={loading}>
+          {loading ? <Loading width={100} height={100} /> : "Entrar"}
+        </button>
       </Form>
       <StyledLink to="/cadastro">
         <p>Não tem uma conta? Cadastre-se!</p>
