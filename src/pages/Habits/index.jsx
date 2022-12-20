@@ -17,8 +17,8 @@ export default function Habits() {
   const [newHabit, setNewHabit] = useState({ days: [], name: "" });
   const [habitsList, setHabitsList] = useState();
   const [showForm, setShowForm] = useState(false);
-  const [reload, setReload] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [newRequest, setNewRequest] = useState(false);
 
   useEffect(() => {
     if (!user.token) {
@@ -26,32 +26,27 @@ export default function Habits() {
     }
     const promise = api.getHabits(user.token);
     promise.then((res) => {
-      setHabitsList(res.data.reverse());
+      setHabitsList(res.data);
     });
     promise.catch((err) => {
       console.log(err);
     });
-  }, [reload, user.token, navigate]);
+  }, [newRequest, user.token, navigate]);
 
   function createHabit(e) {
+    setLoading(true);
     e.preventDefault();
-    if (newHabit.days.length === 0) {
-      window.alert("Selecione ao menos um dia da semana");
-      return;
-    }
-    setDisabled(true);
     const promise = api.createHabit(newHabit, user.token);
-    promise.then((res) => {
+    promise.then(() => {
+      setLoading(false);
       getPercentage();
+      resetHabits();
+      setShowForm(false);
+      setNewRequest(!newRequest);
     });
     promise.catch((err) => {
-      alert(err.response.data.message);
-    });
-    promise.finally(() => {
-      resetHabits();
-      setDisabled(false);
-      setShowForm(false);
-      setReload(!reload);
+      setLoading(false);
+      window.alert(err.response.data.message);
     });
   }
 
@@ -60,12 +55,10 @@ export default function Habits() {
       const promise = api.deleteHabit(id, user.token);
       promise.then((res) => {
         getPercentage();
+        setNewRequest(!newRequest);
       });
       promise.catch((err) => {
         alert(err.response.data.message);
-      });
-      promise.finally(() => {
-        setReload(!reload);
       });
     }
   }
@@ -103,20 +96,24 @@ export default function Habits() {
       <Container>
         <Headline>
           <h2>Meus hábitos</h2>
-          <button onClick={() => setShowForm(!showForm)}>+</button>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            data-test="habit-create-btn"
+          >
+            +
+          </button>
         </Headline>
         {showForm && (
-          <FormContainer>
+          <FormContainer data-test="habit-create-container">
             <Form onSubmit={createHabit}>
               <input
                 value={newHabit.name}
                 onChange={(e) =>
                   setNewHabit({ ...newHabit, name: e.target.value })
                 }
-                type="text"
                 placeholder="nome do hábito"
-                disabled={disabled}
-                required
+                disabled={loading}
+                data-test="habit-name-input"
               />
               <div>
                 {weekDays.map((d) => (
@@ -125,18 +122,28 @@ export default function Habits() {
                     type="button"
                     key={d.id}
                     onClick={() => handleDayChange(d.id)}
-                    disabled={disabled}
+                    disabled={loading}
+                    data-test="habit-day"
                   >
                     {d.name}
                   </DayBtn>
                 ))}
               </div>
               <div>
-                <button type="button" onClick={() => setShowForm(false)}>
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  data-test="habit-create-cancel-btn"
+                  disabled={loading}
+                >
                   Cancelar
                 </button>
-                <button type="submit" disabled={disabled}>
-                  {disabled ? <Loading width={84} height={35} /> : "Salvar"}
+                <button
+                  type="submit"
+                  data-test="habit-create-save-btn"
+                  disabled={loading}
+                >
+                  {loading ? <Loading width={84} height={35} /> : "Salvar"}
                 </button>
               </div>
             </Form>
@@ -144,11 +151,12 @@ export default function Habits() {
         )}
         {habitsList.length > 0 ? (
           habitsList.map((h) => (
-            <HabitContainer key={h.id}>
+            <HabitContainer data-test="habit-container" key={h.id}>
               <Habit>
                 <HabitHeadline>
-                  <h2>{h.name}</h2>
+                  <h2 data-test="habit-name">{h.name}</h2>
                   <IonIcon
+                    data-test="habit-delete-btn"
                     icon={trashOutline}
                     onClick={() => deleteHabit(h.id)}
                     size="large"
@@ -158,6 +166,7 @@ export default function Habits() {
                 <HabitBtns>
                   {weekDays.map((d) => (
                     <DayBtn
+                      data-test="habit-day"
                       selected={h.days.includes(d.id)}
                       type="button"
                       key={d.id}

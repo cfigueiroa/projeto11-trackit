@@ -11,7 +11,7 @@ export default function Header() {
   }
 
   return (
-    <Container>
+    <Container data-test="header">
       <p>TrackIt</p>
       <div>
       <IonIcon icon={logOutOutline} onClick={logmeout} size="large" />

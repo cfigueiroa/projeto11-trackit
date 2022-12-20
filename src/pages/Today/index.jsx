@@ -31,7 +31,7 @@ export default function Today() {
     }
     const promise = api.getTodayHabits(user.token);
     promise.then((res) => {
-      const tempHabit = res.data.reverse();
+      const tempHabit = res.data;
       setHabitsList(tempHabit);
     });
     promise
@@ -73,24 +73,24 @@ export default function Today() {
       <Header />
       <Container>
         <Headline>
-          <h2>
+          <h2 data-test="today">
             {dayOfWeek}, {format(date, month)}
           </h2>
           {percentage ? (
-            <h3 style={{ color: "#8FC549" }}>
+            <h3 data-test="today-counter" style={{ color: "#8FC549" }}>
               {percentage}% dos hábitos concluídos
             </h3>
           ) : (
-            <h3>Nenhum hábito concluído ainda</h3>
+            <h3 data-test="today-counter">Nenhum hábito concluído ainda</h3>
           )}
         </Headline>
         {habitsList.length > 0 ? (
           habitsList.map((h) => (
-            <HabitContainer key={h.id}>
+            <HabitContainer data-test="today-habit-container" key={h.id}>
               <Habit>
                 <HabitHeadline>
-                  <h2>{h.name}</h2>
-                  <p>
+                  <h2 data-test="today-habit-name">{h.name}</h2>
+                  <p data-test="today-habit-sequence">
                     Sequência atual:
                     <strong
                       style={
@@ -101,7 +101,8 @@ export default function Today() {
                       {h.currentSequence}{" "}
                       {h.currentSequence > 1 ? "dias" : "dia"}
                     </strong>
-                    <br />
+                    </p>
+                    <p data-test="today-habit-record" style={{margin: "0"}}>
                     Seu recorde:{" "}
                     <strong
                       style={
@@ -116,7 +117,7 @@ export default function Today() {
                       {h.highestSequence > 1 ? "dias" : "dia"}
                     </strong>
                   </p>
-                  <CheckSquare selected={h.done}>
+                  <CheckSquare data-test="today-habit-check-btn" selected={h.done}>
                     <img
                       src={check}
                       alt="check"

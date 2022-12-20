@@ -8,9 +8,9 @@ export default function Footer() {
   const { percentage } = useMyContext();
   const navigate = useNavigate();
   return (
-    <Container>
-      <p onClick={() => navigate("/habitos")}>Hábitos</p>
-      <ProgressbarContainer onClick={() => navigate("/hoje")}>
+    <Container data-test="menu">
+      <p data-test="habit-link" onClick={() => navigate("/habitos")}>Hábitos</p>
+      <ProgressbarContainer data-test="today-link" onClick={() => navigate("/hoje")}>
         <CircularProgressbar
           value={percentage}
           text={`Hoje`}
@@ -24,7 +24,7 @@ export default function Footer() {
           })}
         />
       </ProgressbarContainer>
-      <p onClick={() => navigate("/historico")}>Histórico</p>
+      <p data-test="history-link" onClick={() => navigate("/historico")}>Histórico</p>
     </Container>
   );
 }
