@@ -10,6 +10,7 @@ import { IonIcon } from "@ionic/react";
 import { trashOutline } from "ionicons/icons";
 import Spinner from "../../components/Spinner";
 import Loading from "../../components/Loading";
+import Swal from "sweetalert2";
 
 export default function Habits() {
   const navigate = useNavigate();
@@ -36,7 +37,10 @@ export default function Habits() {
   function createHabit(e) {
     e.preventDefault();
     if (newHabit.days.length === 0) {
-      window.alert("Selecione ao menos um dia da semana");
+      Swal.fire({
+        title: "Selecione ao menos um dia da semana",
+        icon: "error",
+      });
       return;
     }
     setDisabled(true);
@@ -45,7 +49,10 @@ export default function Habits() {
       getPercentage();
     });
     promise.catch((err) => {
-      alert(err.response.data.message);
+      Swal.fire({
+        title: err.response.data.message,
+        icon: 'error'
+      });
     });
     promise.finally(() => {
       resetHabits();
@@ -56,18 +63,31 @@ export default function Habits() {
   }
 
   function deleteHabit(id) {
-    if (window.confirm("Tem certeza que deseja deletar esse hábito?")) {
-      const promise = api.deleteHabit(id, user.token);
-      promise.then((res) => {
-        getPercentage();
-      });
-      promise.catch((err) => {
-        alert(err.response.data.message);
-      });
-      promise.finally(() => {
-        setReload(!reload);
-      });
-    }
+    Swal.fire({
+      title: "Tem certeza que deseja deletar esse hábito?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim",
+      cancelButtonText: "Não"
+    }).then((result) => {
+      if (result.value) {
+        const promise = api.deleteHabit(id, user.token);
+        promise.then((res) => {
+          getPercentage();
+        });
+        promise.catch((err) => {
+          Swal.fire({
+            title: err.response.data.message,
+            icon: 'error'
+          });
+        });
+        promise.finally(() => {
+          setReload(!reload);
+        });
+      }
+    });
   }
 
   function resetHabits() {

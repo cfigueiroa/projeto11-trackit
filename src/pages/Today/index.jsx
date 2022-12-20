@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import check from "../../assets/check.png";
 import api from "../../services/api";
 import Spinner from "../../components/Spinner";
+import Swal from 'sweetalert2';
 
 export default function Today() {
   const navigate = useNavigate();
@@ -51,7 +52,10 @@ export default function Today() {
       promise = api.unmarkHabitAsDone(id, user.token);
     }
     promise.catch((err) => {
-      alert(err.response.data.message);
+      Swal.fire({
+        title: err.response.data.message,
+        icon: 'error'
+      });
     });
     promise.finally(() => {
       setReload(!reload);
