@@ -6,7 +6,6 @@ import useMyContext from "../../components/Context";
 import { StyledLink } from "./styles";
 import api from "../../services/api";
 import Loading from "../../components/Loading";
-import Swal from 'sweetalert2';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -24,10 +23,7 @@ export default function Home() {
     });
     promise
       .catch((err) => {
-        Swal.fire({
-          title: err.response.data.message,
-          icon: 'error'
-        });
+        alert(err.response.data.message);
       })
       .finally(() => {
         setLoading(false);

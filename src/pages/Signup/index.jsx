@@ -5,7 +5,6 @@ import { StyledLink } from "./styles";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Loading from "../../components/Loading";
-import Swal from 'sweetalert2';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -32,10 +31,7 @@ export default function Signup() {
       navigate("/");
     });
     promise.catch((err) => {
-      Swal.fire({
-        title: err.response.data.message,
-        icon: 'error'
-      });
+      alert(err.response.data.message);
     });
     promise.finally(() => {
       setLoading(false);
