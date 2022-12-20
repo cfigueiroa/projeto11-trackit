@@ -46,6 +46,7 @@ export default function Habits() {
     });
     promise.finally(() => {
       resetHabits();
+      setShowForm(false);
       setReload(!reload);
     });
   }
@@ -67,6 +68,7 @@ export default function Habits() {
 
   function resetHabits() {
     setNewHabit({ days: [], name: "" });
+    setShowForm(false);
   }
 
   const handleDayChange = (day) => {
@@ -124,7 +126,7 @@ export default function Habits() {
                 ))}
               </div>
               <div>
-                <button type="button" onClick={resetHabits}>
+                <button type="button" onClick={() => setShowForm(false)}>
                   Cancelar
                 </button>
                 <button type="submit">Salvar</button>
@@ -289,6 +291,7 @@ export const Form = styled.form`
   padding: 0 20px;
   gap: 15px;
   input {
+    padding-left: 10px;
     width: 89.12%;
     min-height: 45px;
     font-family: "Lexend Deca";
