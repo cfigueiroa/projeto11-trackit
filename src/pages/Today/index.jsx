@@ -91,9 +91,27 @@ export default function Today() {
                 <HabitHeadline>
                   <h2>{h.name}</h2>
                   <p>
-                    Sequência atual: {h.currentSequence} dias
+                    Sequência atual:
+                    <strong
+                      style={
+                        h.done ? { color: "#8FC549" } : { color: "#666666" }
+                      }
+                    >
+                      {" "}
+                      {h.currentSequence} {h.currentSequence > 1 ? "dias" : "dia"}
+                    </strong>
                     <br />
-                    Seu recorde: {h.highestSequence} dias
+                    Seu recorde:{" "}
+                    <strong
+                      style={
+                        h.currentSequence === h.highestSequence &&
+                        h.highestSequence !== 0
+                          ? { color: "#8FC549" }
+                          : { color: "#666666" }
+                      }
+                    >
+                      {h.highestSequence} {h.highestSequence > 1 ? "dias" : "dia"}
+                    </strong>
                   </p>
                   <CheckSquare selected={h.done}>
                     <img
